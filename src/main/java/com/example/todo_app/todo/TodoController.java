@@ -17,8 +17,8 @@ class TodoController {
     }
 
     @GetMapping
-    Collection<Todo> findAll() {
-        return this.todoService.findAll();
+    Collection<Todo> findAll(@ModelAttribute FilterDto filterDto ) {
+        return this.todoService.findAll(filterDto);
     }
 
     @PostMapping

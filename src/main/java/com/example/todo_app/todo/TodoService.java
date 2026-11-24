@@ -2,7 +2,6 @@ package com.example.todo_app.todo;
 
 
 import org.springframework.http.HttpStatus;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -22,8 +21,17 @@ class TodoService {
         return todoRepository.save(new Todo(null, createTodoDto.title(), createTodoDto.description(), createTodoDto.dueDate(), null, createTodoDto.priority()));
     }
 
-    Collection<Todo> findAll() {
-        return this.todoRepository.findAll();
+    Collection<Todo> findAll(FilterDto filterDto) {
+
+        var todos = this.todoRepository.findAll().stream();
+        if (filterDto.status().isPresent()) {
+            var status = filterDto.status().get();
+            todos = todos.filter(s -> status == Status.COMPLETED ? s.completedAt() != null : s.completedAt() == null);
+        }
+        if (filterDto.search() != null) {
+            todos = todos.filter(todo -> todo.title().toLowerCase().contains(filterDto.search().toLowerCase()));
+        }
+        return todos.toList();
     }
 
     Optional<Todo> findById(int id) {

@@ -23,3 +23,12 @@ record TodoDto(
         Integer priority
 ) { }
 
+record  FilterDto(
+        Optional<Status> status,
+        String search
+){}
+
+enum Status{
+        COMPLETED,
+        PENDING
+}
